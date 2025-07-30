@@ -20,6 +20,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      position: relative;
     }
     @keyframes gradient {
       0% { background-position: 0% 50%; }
@@ -39,34 +40,126 @@
       100% { transform: scale(1); }
     }
     .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      width: 100%;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
       max-width: 1000px;
+      width: 100%;
     }
     .gallery img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
+      width: 120px;
+      height: 80px;
       object-fit: cover;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
+    .gallery img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    /* Modal */
+    #modal {
+      display: none;
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background-color: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+    #modal img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 12px;
+      box-shadow: 0 0 30px rgba(255,255,255,0.8);
+    }
+    #modal:target {
+      display: flex;
+    }
+    /* Close button */
+    #modal-close {
+      position: fixed;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1001;
+      user-select: none;
+      text-shadow: 0 0 6px black;
+    }
+
+    /* Footer copyright */
+    footer {
+      position: fixed;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      opacity: 0.7;
+      color: #222;
+      text-shadow: 1px 1px 3px white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      user-select: none;
+      cursor: default;
+      z-index: 10;
+    }
+
+    /* Responsividade */
     @media (max-width: 600px) {
       h1 {
         font-size: 1.8rem;
+      }
+      .gallery img {
+        width: 90px;
+        height: 60px;
       }
     }
   </style>
 </head>
 <body>
   <h1>Eu te amo ❤️</h1>
+
   <div class="gallery">
-    <img src="Images/Imagem1.jpg" alt="Imagem 1" />
-    <img src="Images/Imagem2.jpg" alt="Imagem 2" />
-    <img src="Images/Imagem3.jpg" alt="Imagem 3" />
-    <img src="Images/Imagem4.jpg" alt="Imagem 4" />
-    <img src="Images/Imagem5.jpg" alt="Imagem 5" />
+    <img src="Images/Imagem1.jpg" alt="Imagem 1" onclick="openModal(this.src)" />
+    <img src="Images/Imagem2.jpg" alt="Imagem 2" onclick="openModal(this.src)" />
+    <img src="Images/Imagem3.jpg" alt="Imagem 3" onclick="openModal(this.src)" />
+    <img src="Images/Imagem4.jpg" alt="Imagem 4" onclick="openModal(this.src)" />
+    <img src="Images/Imagem5.jpg" alt="Imagem 5" onclick="openModal(this.src)" />
   </div>
+
+  <!-- Modal -->
+  <div id="modal" onclick="closeModal(event)">
+    <span id="modal-close" onclick="closeModal(event)">&times;</span>
+    <img id="modal-img" src="" alt="Imagem ampliada" />
+  </div>
+
+  <footer>
+    © Feito por Rubens Emmanuel
+  </footer>
+
+  <script>
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    const modalClose = document.getElementById('modal-close');
+
+    function openModal(src) {
+      modal.style.display = 'flex';
+      modalImg.src = src;
+    }
+
+    function closeModal(e) {
+      // Fecha modal se clicar fora da imagem ou no botão close
+      if(e.target === modal || e.target === modalClose) {
+        modal.style.display = 'none';
+        modalImg.src = '';
+      }
+    }
+  </script>
 </body>
 </html>
