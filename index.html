@@ -11,7 +11,7 @@
       box-sizing: border-box;
     }
     body {
-      min-height: 100vh; /* altura mínima para footer */
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -88,7 +88,7 @@
       display: none;
     }
     .creditos {
-      position: fixed; /* fixar na tela */
+      position: fixed;
       bottom: 10px;
       left: 50%;
       transform: translateX(-50%);
@@ -103,7 +103,6 @@
     .creditos:hover {
       opacity: 1;
     }
-    /* Galeria de imagens estáticas */
     .gallery {
       display: flex;
       gap: 10px;
@@ -118,7 +117,6 @@
       box-shadow: 0 0 10px rgba(255,255,255,0.5);
       object-fit: cover;
     }
-    /* Responsividade para celulares */
     @media (max-width: 400px) {
       h1 {
         font-size: 2.5rem;
@@ -147,7 +145,6 @@
 <body>
   <h1>Eu te amo ❤️</h1>
 
-  <!-- Galeria de imagens estáticas -->
   <div class="gallery">
     <img src="Images/Imagem1.jpg" alt="Imagem 1" />
     <img src="Images/Imagem2.jpg" alt="Imagem 2" />
@@ -156,7 +153,6 @@
     <img src="Images/Imagem5.jpg" alt="Imagem 5" />
   </div>
 
-  <!-- Formulário de upload só para preview -->
   <form id="uploadForm">
     <label for="photo">Escolha uma foto para enviar:</label><br />
     <input type="file" id="photo" name="photo" accept="image/*" required /><br />
@@ -197,4 +193,3 @@
   </script>
 </body>
 </html>
-
