@@ -70,15 +70,14 @@
       align-items: center;
       z-index: 1000;
       padding: 20px;
+      flex-direction: column;
     }
     #modal img {
       max-width: 90vw;
-      max-height: 90vh;
+      max-height: 80vh;
       border-radius: 12px;
       box-shadow: 0 0 30px rgba(255,255,255,0.8);
-    }
-    #modal:target {
-      display: flex;
+      user-select: none;
     }
     /* Close button */
     #modal-close {
@@ -93,7 +92,32 @@
       user-select: none;
       text-shadow: 0 0 6px black;
     }
-
+    /* Navigation arrows */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 3rem;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      text-shadow: 0 0 6px black;
+      z-index: 1001;
+      padding: 0 15px;
+      background: rgba(0,0,0,0.3);
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+    }
+    .nav-arrow:hover {
+      background: rgba(0,0,0,0.6);
+    }
+    #nav-left {
+      left: 20px;
+    }
+    #nav-right {
+      right: 20px;
+    }
     /* Footer copyright */
     footer {
       position: fixed;
@@ -109,7 +133,6 @@
       cursor: default;
       z-index: 10;
     }
-
     /* Responsividade */
     @media (max-width: 600px) {
       h1 {
@@ -119,6 +142,10 @@
         width: 90px;
         height: 60px;
       }
+      .nav-arrow {
+        font-size: 2.2rem;
+        padding: 0 10px;
+      }
     }
   </style>
 </head>
@@ -126,17 +153,19 @@
   <h1>Eu te amo ❤️</h1>
 
   <div class="gallery">
-    <img src="Images/Imagem1.jpg" alt="Imagem 1" onclick="openModal(this.src)" />
-    <img src="Images/Imagem2.jpg" alt="Imagem 2" onclick="openModal(this.src)" />
-    <img src="Images/Imagem3.jpg" alt="Imagem 3" onclick="openModal(this.src)" />
-    <img src="Images/Imagem4.jpg" alt="Imagem 4" onclick="openModal(this.src)" />
-    <img src="Images/Imagem5.jpg" alt="Imagem 5" onclick="openModal(this.src)" />
+    <img src="Images/Imagem1.jpg" alt="Imagem 1" data-index="0" onclick="openModal(0)" />
+    <img src="Images/Imagem2.jpg" alt="Imagem 2" data-index="1" onclick="openModal(1)" />
+    <img src="Images/Imagem3.jpg" alt="Imagem 3" data-index="2" onclick="openModal(2)" />
+    <img src="Images/Imagem4.jpg" alt="Imagem 4" data-index="3" onclick="openModal(3)" />
+    <img src="Images/Imagem5.jpg" alt="Imagem 5" data-index="4" onclick="openModal(4)" />
   </div>
 
   <!-- Modal -->
   <div id="modal" onclick="closeModal(event)">
     <span id="modal-close" onclick="closeModal(event)">&times;</span>
+    <span id="nav-left" class="nav-arrow" onclick="prevImage(event)">&#10094;</span>
     <img id="modal-img" src="" alt="Imagem ampliada" />
+    <span id="nav-right" class="nav-arrow" onclick="nextImage(event)">&#10095;</span>
   </div>
 
   <footer>
@@ -148,18 +177,49 @@
     const modalImg = document.getElementById('modal-img');
     const modalClose = document.getElementById('modal-close');
 
-    function openModal(src) {
+    const images = [
+      'Images/Imagem1.jpg',
+      'Images/Imagem2.jpg',
+      'Images/Imagem3.jpg',
+      'Images/Imagem4.jpg',
+      'Images/Imagem5.jpg'
+    ];
+
+    let currentIndex = 0;
+
+    function openModal(index) {
+      currentIndex = index;
       modal.style.display = 'flex';
-      modalImg.src = src;
+      modalImg.src = images[currentIndex];
     }
 
     function closeModal(e) {
-      // Fecha modal se clicar fora da imagem ou no botão close
-      if(e.target === modal || e.target === modalClose) {
+      if (e.target === modal || e.target === modalClose) {
         modal.style.display = 'none';
         modalImg.src = '';
       }
     }
+
+    function prevImage(e) {
+      e.stopPropagation(); // evita fechar modal
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      modalImg.src = images[currentIndex];
+    }
+
+    function nextImage(e) {
+      e.stopPropagation();
+      currentIndex = (currentIndex + 1) % images.length;
+      modalImg.src = images[currentIndex];
+    }
+
+    // Fechar modal com ESC
+    document.addEventListener('keydown', e => {
+      if (modal.style.display === 'flex') {
+        if (e.key === 'Escape') closeModal({target: modal});
+        if (e.key === 'ArrowLeft') prevImage(e);
+        if (e.key === 'ArrowRight') nextImage(e);
+      }
+    });
   </script>
 </body>
 </html>
