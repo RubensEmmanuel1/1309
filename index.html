@@ -11,7 +11,7 @@
       box-sizing: border-box;
     }
     body {
-      height: 100vh;
+      min-height: 100vh; /* altura mínima para footer */
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -24,7 +24,6 @@
       text-align: center;
       padding: 20px;
       position: relative;
-      min-height: 100vh; /* garante altura mínima para o footer */
     }
     h1 {
       font-size: 4rem;
@@ -78,6 +77,7 @@
     #message {
       margin-top: 15px;
       min-height: 1.5em;
+      color: white;
     }
     #preview {
       margin-top: 20px;
@@ -103,7 +103,21 @@
     .creditos:hover {
       opacity: 1;
     }
-
+    /* Galeria de imagens estáticas */
+    .gallery {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0;
+      max-width: 100%;
+    }
+    .gallery img {
+      max-width: 150px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      object-fit: cover;
+    }
     /* Responsividade para celulares */
     @media (max-width: 400px) {
       h1 {
@@ -124,16 +138,29 @@
       body {
         padding: 15px;
       }
+      .gallery img {
+        max-width: 100px;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Eu te amo ❤️</h1>
 
-  <form id="uploadForm" enctype="multipart/form-data">
+  <!-- Galeria de imagens estáticas -->
+  <div class="gallery">
+    <img src="Images/Imagem1.jpg" alt="Imagem 1" />
+    <img src="Images/Imagem2.jpg" alt="Imagem 2" />
+    <img src="Images/Imagem3.jpg" alt="Imagem 3" />
+    <img src="Images/Imagem4.jpg" alt="Imagem 4" />
+    <img src="Images/Imagem5.jpg" alt="Imagem 5" />
+  </div>
+
+  <!-- Formulário de upload só para preview -->
+  <form id="uploadForm">
     <label for="photo">Escolha uma foto para enviar:</label><br />
     <input type="file" id="photo" name="photo" accept="image/*" required /><br />
-    <button type="submit">Enviar foto</button>
+    <button type="submit">Mostrar preview</button>
   </form>
 
   <div id="message"></div>
@@ -145,12 +172,12 @@
     const form = document.getElementById('uploadForm');
     const message = document.getElementById('message');
     const preview = document.getElementById('preview');
+    const fileInput = document.getElementById('photo');
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', e => {
       e.preventDefault();
-      const fileInput = document.getElementById('photo');
-      const file = fileInput.files[0];
 
+      const file = fileInput.files[0];
       if (!file) {
         message.textContent = 'Selecione um arquivo primeiro!';
         message.style.color = 'red';
@@ -158,31 +185,16 @@
         return;
       }
 
-      const formData = new FormData();
-      formData.append('photo', file);
-
-      try {
-        const res = await fetch('/upload', {
-          method: 'POST',
-          body: formData
-        });
-
-        if (!res.ok) throw new Error('Falha no upload');
-
-        const data = await res.json();
-        message.textContent = data.message;
-        message.style.color = 'white';
-
-        preview.src = `/uploads/${data.filename}`;
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
         preview.style.display = 'block';
-
-        fileInput.value = '';
-      } catch (err) {
-        message.textContent = 'Erro: ' + err.message;
-        message.style.color = 'red';
-        preview.style.display = 'none';
-      }
+        message.textContent = 'Preview da imagem carregada!';
+        message.style.color = 'white';
+      };
+      reader.readAsDataURL(file);
     });
   </script>
 </body>
 </html>
+
